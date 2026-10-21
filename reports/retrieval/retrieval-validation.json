@@ -1,0 +1,51 @@
+{
+  "status": "PASS",
+  "original_top50_unchanged": true,
+  "prefix_consistency": true,
+  "files": [
+    {
+      "path": "D:\\HaNoRec\\mm-retrieval-rerank\\manifests\\microlens\\val_top50.jsonl",
+      "k": 50,
+      "alpha": 0.5,
+      "gamma": 1.0,
+      "queries": 5000,
+      "hits": 308,
+      "recall": 0.0616,
+      "sha256": "90130d245bc0f353831d5231e937bdd90127860b3871bcc32632fda124a259da",
+      "status": "PASS"
+    },
+    {
+      "path": "D:\\HaNoRec\\mm-retrieval-rerank\\manifests\\microlens\\val_top100.jsonl",
+      "k": 100,
+      "alpha": 0.5,
+      "gamma": 1.0,
+      "queries": 5000,
+      "hits": 426,
+      "recall": 0.0852,
+      "sha256": "64ca40daf3032c67cc016e73687351264de91c1c9d04c635b2dd11cbee42e85a",
+      "status": "PASS"
+    },
+    {
+      "path": "D:\\HaNoRec\\mm-retrieval-rerank\\manifests\\microlens\\val_fusion_a0p5_g0p5_top50.jsonl",
+      "k": 50,
+      "alpha": 0.5,
+      "gamma": 0.5,
+      "queries": 5000,
+      "hits": 324,
+      "recall": 0.0648,
+      "sha256": "56c73c5bfee211b58bd519098f486345ef710917d96ba32e20d0f5f16e14e122",
+      "status": "PASS"
+    },
+    {
+      "path": "D:\\HaNoRec\\mm-retrieval-rerank\\manifests\\microlens\\val_fusion_a0p5_g0p5_top100.jsonl",
+      "k": 100,
+      "alpha": 0.5,
+      "gamma": 0.5,
+      "queries": 5000,
+      "hits": 442,
+      "recall": 0.0884,
+      "sha256": "55e7eb5454dedff4d3cc3629fd7141b4d85786999becaeca74e63e425ce7eaf0",
+      "status": "PASS"
+    }
+  ]
+}

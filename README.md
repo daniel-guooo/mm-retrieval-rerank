@@ -2,6 +2,10 @@
 
 两阶段多模态推荐：Stage 1 冻结 CLIP 全库召回 Top-50 → Stage 2 Qwen2.5-VL-3B pointwise 重排。
 
+## 实验室 Qwen 重排交接
+
+已冻结六组验证集候选。请先阅读 [Qwen 重排交接指南](docs/qwen_lab_handoff.md)，参数清单在 [configs/qwen_handoff.json](configs/qwen_handoff.json)，已有实验结果在 [reports/retrieval](reports/retrieval)。
+
 ## 环境
 
 ```bash
@@ -16,7 +20,7 @@ pip install -e .
 ## 目录
 
 ```
-src/mmrr/data/     数据接口（schema.py 约定格式，loaders.py 待实现）+ prompt_dataset.py（拼提示词）
+src/mmrr/data/     数据接口（schema.py 约定格式，loaders.py 已实现）+ prompt_dataset.py（拼提示词）
 src/mmrr/models/   CLIP 编码器、提示词模板 qwen_prompt.py、Qwen 打分（HF / vLLM）
 src/mmrr/eval/     名次与记录格式
 scripts/           check_loader / encode_items / preview_prompts / rerank_qwen

@@ -1,0 +1,4 @@
+# Data-only validation; no torch, CUDA or model loading.
+pillow
+pytest
+transformers==4.49.0

@@ -1,0 +1,59 @@
+{
+  "dataset": "microlens",
+  "split": "val",
+  "alpha": 0.5,
+  "gamma": 0.5,
+  "n_users": 5000,
+  "n_users_total": 5000,
+  "n_items": 19220,
+  "max_users": null,
+  "sampling": "all queries",
+  "history_exclusion": "input history only",
+  "tie_break": "ascending original item ID",
+  "search": "exact CPU inner product",
+  "batch_size": 128,
+  "metric_scope": "all queries; unretrieved targets score zero",
+  "popularity_source": "full train.tsv interactions only",
+  "embedding_meta": {
+    "dataset": "microlens",
+    "n_items": 19220,
+    "n_missing_images": 0,
+    "model": "D:\\HaNoRec\\models\\clip-vit-base-patch32",
+    "hf_commit": null,
+    "dim": 512,
+    "max_text_len": 77,
+    "l2_normalized": true,
+    "dtype": "float32",
+    "n_text_truncated": 125,
+    "git_commit": "f183b119bd74effcf4aca7551f51d2d118121b94",
+    "created_at": "2026-10-21T03:19:33+00:00",
+    "host": "LAPTOP-R022BIBM",
+    "versions": {
+      "torch": "2.5.1+cu124",
+      "transformers": "4.49.0",
+      "vllm": null,
+      "qwen-vl-utils": "0.0.10"
+    }
+  },
+  "source_sha256": {
+    "item_has_img.npy": "c42e5bd226f309a57fd635f6352f55da39532ab51bd95ba095129efb877ddabf",
+    "item_ids.npy": "e27dd44104a7a8d6bc5c9ec3675df0c79ce2a3cd1c5112f19c76d396e0078847",
+    "item_img.npy": "09a82094d656f0be2dda3960b29ad8b30bc2d18d5594b65ab2be4d4f756d7858",
+    "item_text.npy": "d8fa0d06eadfbdd66e46eaa1f89f40cc62a082bee163c7c3921e7b7a165e0ed5",
+    "val.tsv": "1b232c066a796a69137a9482917c66d4d93052c537e48bedcca108b2dd53573e"
+  },
+  "retrieval_code_sha256": "dbc30c7facf2a4ee85b1e267004aecb278e902a193f7380b31cb1378eb32597a",
+  "method": "fusion",
+  "k": 50,
+  "manifest_tag": "fusion_a0p5_g0p5",
+  "manifest_sha256": "56c73c5bfee211b58bd519098f486345ef710917d96ba32e20d0f5f16e14e122",
+  "git_commit": "f183b119bd74effcf4aca7551f51d2d118121b94",
+  "created_at": "2026-10-21T18:09:09+00:00",
+  "host": "LAPTOP-R022BIBM",
+  "versions": {
+    "torch": "2.5.1+cu124",
+    "transformers": "4.49.0",
+    "vllm": null,
+    "qwen-vl-utils": "0.0.10"
+  }
+}

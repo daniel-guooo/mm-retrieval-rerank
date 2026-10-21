@@ -10,7 +10,7 @@ from tqdm import tqdm
 from transformers import CLIPModel, CLIPProcessor
 
 DEFAULT_CLIP = "openai/clip-vit-base-patch32"
-MAX_TEXT_LEN = 500
+MAX_TEXT_LEN = 77
 
 
 def pick_device() -> str:

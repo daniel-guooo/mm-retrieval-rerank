@@ -1,0 +1,56 @@
+{
+  "dataset": "microlens",
+  "split": "val",
+  "alpha": 0.5,
+  "gamma": 0.5,
+  "quotas": {
+    "fusion": 60,
+    "text": 20,
+    "image": 20
+  },
+  "k": 100,
+  "route_depth": 100,
+  "selection": "fusion then text then image; skip duplicates and backfill each route quota",
+  "ordering": "equal-weight RRF c=60 on top100 route ranks; ordering only, no candidate selection",
+  "source_sha256": {
+    "item_has_img.npy": "c42e5bd226f309a57fd635f6352f55da39532ab51bd95ba095129efb877ddabf",
+    "item_ids.npy": "e27dd44104a7a8d6bc5c9ec3675df0c79ce2a3cd1c5112f19c76d396e0078847",
+    "item_img.npy": "09a82094d656f0be2dda3960b29ad8b30bc2d18d5594b65ab2be4d4f756d7858",
+    "item_text.npy": "d8fa0d06eadfbdd66e46eaa1f89f40cc62a082bee163c7c3921e7b7a165e0ed5",
+    "val.tsv": "1b232c066a796a69137a9482917c66d4d93052c537e48bedcca108b2dd53573e"
+  },
+  "manifest_sha256": "a5973d2a86234b8001ba63935d9a6893177500f7cf6e1cc0cd963c276dad1523",
+  "code_sha256": {
+    "scripts\\evaluate_multiroute.py": "8ea18395041d312805b6c70f834f81cc2576f741ffdc2698d3ec3be12b925097",
+    "src\\mmrr\\multiroute.py": "0044f4db5a70e5c4c79ad2215ee6d8ab0da6726aa7501c8274fcc9dbdd52053e",
+    "src\\mmrr\\retrieval.py": "dbc30c7facf2a4ee85b1e267004aecb278e902a193f7380b31cb1378eb32597a"
+  },
+  "metrics": {
+    "quotas": [
+      60,
+      20,
+      20
+    ],
+    "k": 100,
+    "n_queries": 5000,
+    "hits": 428,
+    "recall": 0.0856,
+    "baseline_hits": 442,
+    "baseline_recall": 0.0884,
+    "gained_queries": 59,
+    "lost_queries": 73,
+    "net_hits": -14,
+    "mean_unique_before_backfill": 87.319,
+    "manifest": "D:\\HaNoRec\\mm-retrieval-rerank\\manifests\\microlens\\val_multi_f60_t20_i20_a0p5_g0p5_top100.jsonl",
+    "validation": "PASS"
+  },
+  "git_commit": "f183b119bd74effcf4aca7551f51d2d118121b94",
+  "created_at": "2026-10-21T18:15:14+00:00",
+  "host": "LAPTOP-R022BIBM",
+  "versions": {
+    "torch": "2.5.1+cu124",
+    "transformers": "4.49.0",
+    "vllm": null,
+    "qwen-vl-utils": "0.0.10"
+  }
+}

@@ -54,7 +54,7 @@ class _Content:
 
     def image(self, item: Item, on: bool) -> "_Content":
         if on and item.image_path is not None:  # 缺图的物品只给标题
-            self.parts.append({"type": "image", "image": str(resolve_data_path(item.image_path)),
+            self.parts.append({"type": "image", "image": resolve_data_path(item.image_path).as_posix(),
                                "min_pixels": self.cfg.min_pixels, "max_pixels": self.cfg.max_pixels})
         return self
 

@@ -1,0 +1,4 @@
+# Preserve frozen candidate bytes and hashes across Windows/Linux checkouts.
+manifests/**/*.jsonl -text whitespace=cr-at-eol
+# Keep source hashes portable across operating systems.
+*.py text eol=lf
