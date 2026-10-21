@@ -149,3 +149,27 @@ git rev-parse HEAD > code-commit.txt
 - `scripts/evaluate_multiroute.py`：复现两组多路召回，需embedding。
 
 只交付这六组已冻结候选即可开始Qwen；无需先重做上述召回实验。
+
+
+## 新增：用户兴趣表示实验（interest50 / interest100）
+
+在原六组实验基础上新增两组候选，配置文件现在共八组。新方法固定图文融合α=0.5；候选分数为75%×与全部历史的最高相似度＋25%×与最近一次交互的相似度，不使用原基线的γ衰减聚合。
+
+| 实验名 | 候选数 | 验证集命中 | Recall@K |
+|---|---:|---:|---:|
+| interest50 | 50 | 357/5000 | 7.14% |
+| interest100 | 100 | 499/5000 | 9.98% |
+
+这些是检索结果，并非Qwen重排结果。原六组文件保持不变。新方案在验证集七种兴趣表示中按Recall@K选出，未使用测试集。
+
+Linux先试跑再全量，使用新的tag：
+
+```bash
+python scripts/run_handoff.py --experiment interest50 --model "$QWEN_MODEL" --max-users 20 --tag interest50_smoke20
+python scripts/run_handoff.py --experiment interest50 --model "$QWEN_MODEL" --tag interest50_full
+python scripts/run_handoff.py --experiment interest100 --model "$QWEN_MODEL" --tag interest100_full
+```
+
+PowerShell将模型变量写为 "$env:QWEN_MODEL"。结果评估沿用第8节命令，替换对应tag。
+
+完整七组比较见 `reports/retrieval/history-interest-report.md` 与 `history-interest-top100-comparison.csv`。复现实验使用 `python scripts/evaluate_interest.py --k 50` 或 `--k 100`，需要已有embedding，输出存在时拒绝覆盖。

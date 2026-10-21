@@ -1,0 +1,33 @@
+{
+  "dataset": "microlens",
+  "split": "val",
+  "alpha": 0.5,
+  "k": 50,
+  "method": "max_last_025",
+  "n_users": 5000,
+  "selection": "Highest validation Recall@50 among seven predefined alternatives; fixed method order for ties",
+  "source_sha256": {
+    "item_has_img.npy": "c42e5bd226f309a57fd635f6352f55da39532ab51bd95ba095129efb877ddabf",
+    "item_ids.npy": "e27dd44104a7a8d6bc5c9ec3675df0c79ce2a3cd1c5112f19c76d396e0078847",
+    "item_img.npy": "09a82094d656f0be2dda3960b29ad8b30bc2d18d5594b65ab2be4d4f756d7858",
+    "item_text.npy": "d8fa0d06eadfbdd66e46eaa1f89f40cc62a082bee163c7c3921e7b7a165e0ed5",
+    "val.tsv": "1b232c066a796a69137a9482917c66d4d93052c537e48bedcca108b2dd53573e"
+  },
+  "manifest_sha256": "6241ec1892a10e11b76e7fe23e7b732114c775fd30b29b65fd362ad5d678b8c2",
+  "code_sha256": {
+    "evaluate_interest.py": "3a2a45b22268a8d7dbbef967874e319e5ffd82ac9d7f066435333c21e2e2f596",
+    "interest.py": "d05b71bcad470a46b94625a57e56d1b8f1d4e4bd6c06548dfa1138e410a29158"
+  },
+  "scores": "per-candidate aggregation of cosine similarities to history items",
+  "history_exclusion": "all input history",
+  "tie_break": "ascending item ID",
+  "git_commit": "66b6fe89600d82960b557ed8205b9f6c9aecc059",
+  "created_at": "2026-10-21T21:25:05+00:00",
+  "host": "LAPTOP-R022BIBM",
+  "versions": {
+    "torch": "2.5.1+cu124",
+    "transformers": "4.49.0",
+    "vllm": null,
+    "qwen-vl-utils": "0.0.10"
+  }
+}

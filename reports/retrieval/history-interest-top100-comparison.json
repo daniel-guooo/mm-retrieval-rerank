@@ -1,0 +1,102 @@
+{
+  "results": [
+    {
+      "method": "baseline_gamma05",
+      "hits": 442,
+      "Recall@100": 0.0884,
+      "HR@10": 0.0274,
+      "NDCG@10": 0.014906642016247945,
+      "gained": 0,
+      "lost": 0
+    },
+    {
+      "method": "last",
+      "hits": 430,
+      "Recall@100": 0.086,
+      "HR@10": 0.028,
+      "NDCG@10": 0.015600053538493527,
+      "gained": 90,
+      "lost": 102
+    },
+    {
+      "method": "last2_mean",
+      "hits": 438,
+      "Recall@100": 0.0876,
+      "HR@10": 0.025,
+      "NDCG@10": 0.013091051984514076,
+      "gained": 74,
+      "lost": 78
+    },
+    {
+      "method": "history_max",
+      "hits": 481,
+      "Recall@100": 0.0962,
+      "HR@10": 0.0278,
+      "NDCG@10": 0.014571916930312227,
+      "gained": 197,
+      "lost": 158
+    },
+    {
+      "method": "history_top2_mean",
+      "hits": 472,
+      "Recall@100": 0.0944,
+      "HR@10": 0.0284,
+      "NDCG@10": 0.015292458672406056,
+      "gained": 160,
+      "lost": 130
+    },
+    {
+      "method": "max_last_025",
+      "hits": 499,
+      "Recall@100": 0.0998,
+      "HR@10": 0.0302,
+      "NDCG@10": 0.01607086779752397,
+      "gained": 165,
+      "lost": 108
+    },
+    {
+      "method": "max_last_050",
+      "hits": 459,
+      "Recall@100": 0.0918,
+      "HR@10": 0.031,
+      "NDCG@10": 0.016967380481393173,
+      "gained": 98,
+      "lost": 81
+    },
+    {
+      "method": "max_last_075",
+      "hits": 441,
+      "Recall@100": 0.0882,
+      "HR@10": 0.0296,
+      "NDCG@10": 0.016035123950651743,
+      "gained": 85,
+      "lost": 86
+    }
+  ],
+  "best_overall": {
+    "method": "max_last_025",
+    "hits": 499,
+    "Recall@100": 0.0998,
+    "HR@10": 0.0302,
+    "NDCG@10": 0.01607086779752397,
+    "gained": 165,
+    "lost": 108
+  },
+  "best_alternative": {
+    "method": "max_last_025",
+    "hits": 499,
+    "Recall@100": 0.0998,
+    "HR@10": 0.0302,
+    "NDCG@10": 0.01607086779752397,
+    "gained": 165,
+    "lost": 108
+  },
+  "saved_manifest": "D:\\HaNoRec\\mm-retrieval-rerank\\manifests\\microlens\\val_interest_max_last_025_a0p5_top100.jsonl",
+  "validation": "PASS",
+  "baseline_unchanged": true,
+  "test_split_used": false,
+  "candidate_budget": 100,
+  "prefix_checks": [
+    "All 8 Top-50 hit counts reproduced; saved Top-50 candidates and scores match prefixes"
+  ]
+}
