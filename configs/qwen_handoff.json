@@ -72,6 +72,26 @@
       ],
       "validation_recall": 0.0856,
       "sha256": "a5973d2a86234b8001ba63935d9a6893177500f7cf6e1cc0cd963c276dad1523"
+    },
+    "interest50": {
+      "manifest": "manifests/microlens/val_interest_max_last_025_a0p5_top50.jsonl",
+      "k": 50,
+      "alpha": 0.5,
+      "interest_method": "max_last_025",
+      "history_max_weight": 0.75,
+      "last_interaction_weight": 0.25,
+      "validation_recall": 0.0714,
+      "sha256": "6241ec1892a10e11b76e7fe23e7b732114c775fd30b29b65fd362ad5d678b8c2"
+    },
+    "interest100": {
+      "manifest": "manifests/microlens/val_interest_max_last_025_a0p5_top100.jsonl",
+      "k": 100,
+      "alpha": 0.5,
+      "interest_method": "max_last_025",
+      "history_max_weight": 0.75,
+      "last_interaction_weight": 0.25,
+      "validation_recall": 0.0998,
+      "sha256": "3e656de7a6c7620ca3c4a42201f1f0c55ef532b8cbe6dab0e66761b2ae516b12"
     }
   }
 }
