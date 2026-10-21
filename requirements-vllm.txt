@@ -1,0 +1,3 @@
+# 仅 Linux / WSL2 + CUDA（例如 4070 那台机器）。vLLM 不支持原生 Windows 和 Mac。
+-r requirements.txt
+vllm==0.7.3

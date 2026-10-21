@@ -1,0 +1,12 @@
+# 和 HaNoRec 对齐的版本（SFT/DPO 也用同一套）
+torch==2.5.1
+torchvision==0.20.1
+transformers==4.49.0
+accelerate
+qwen-vl-utils==0.0.10
+pillow
+numpy
+pandas
+tqdm
+pyyaml
+pytest
