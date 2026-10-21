@@ -1,0 +1,77 @@
+{
+  "dataset": "microlens",
+  "split": "val",
+  "n_users": 5000,
+  "model": "Qwen/Qwen2.5-VL-3B-Instruct",
+  "model_revision": "66285546d2b821cf421d4f5eb2576359d3770cd3",
+  "prompt": "onerec@v1",
+  "history_images": false,
+  "candidate_image": true,
+  "min_pixels": 50176,
+  "max_pixels": 200704,
+  "seed": 2025,
+  "experiments": {
+    "baseline50": {
+      "manifest": "manifests/microlens/val_top50.jsonl",
+      "k": 50,
+      "alpha": 0.5,
+      "gamma": 1,
+      "quotas_fusion_text_image": null,
+      "validation_recall": 0.0616,
+      "sha256": "90130d245bc0f353831d5231e937bdd90127860b3871bcc32632fda124a259da"
+    },
+    "baseline100": {
+      "manifest": "manifests/microlens/val_top100.jsonl",
+      "k": 100,
+      "alpha": 0.5,
+      "gamma": 1,
+      "quotas_fusion_text_image": null,
+      "validation_recall": 0.0852,
+      "sha256": "64ca40daf3032c67cc016e73687351264de91c1c9d04c635b2dd11cbee42e85a"
+    },
+    "best50": {
+      "manifest": "manifests/microlens/val_fusion_a0p5_g0p5_top50.jsonl",
+      "k": 50,
+      "alpha": 0.5,
+      "gamma": 0.5,
+      "quotas_fusion_text_image": null,
+      "validation_recall": 0.0648,
+      "sha256": "56c73c5bfee211b58bd519098f486345ef710917d96ba32e20d0f5f16e14e122"
+    },
+    "best100": {
+      "manifest": "manifests/microlens/val_fusion_a0p5_g0p5_top100.jsonl",
+      "k": 100,
+      "alpha": 0.5,
+      "gamma": 0.5,
+      "quotas_fusion_text_image": null,
+      "validation_recall": 0.0884,
+      "sha256": "55e7eb5454dedff4d3cc3629fd7141b4d85786999becaeca74e63e425ce7eaf0"
+    },
+    "multi50": {
+      "manifest": "manifests/microlens/val_multi_f30_t10_i10_a0p5_g0p5_top50.jsonl",
+      "k": 50,
+      "alpha": 0.5,
+      "gamma": 0.5,
+      "quotas_fusion_text_image": [
+        30,
+        10,
+        10
+      ],
+      "validation_recall": 0.064,
+      "sha256": "1dd434c3012dda7f6dc78da2dbb78b897ac6070addcff9cc4ba85df3f6824fd8"
+    },
+    "multi100": {
+      "manifest": "manifests/microlens/val_multi_f60_t20_i20_a0p5_g0p5_top100.jsonl",
+      "k": 100,
+      "alpha": 0.5,
+      "gamma": 0.5,
+      "quotas_fusion_text_image": [
+        60,
+        20,
+        20
+      ],
+      "validation_recall": 0.0856,
+      "sha256": "a5973d2a86234b8001ba63935d9a6893177500f7cf6e1cc0cd963c276dad1523"
+    }
+  }
+}

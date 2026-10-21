@@ -7,7 +7,7 @@ __pycache__/
 .DS_Store
 
 # large / machine-local
-data/
+/data/
 checkpoints/
 outputs/
 *.zip

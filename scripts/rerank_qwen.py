@@ -10,6 +10,8 @@
 输出 OUTPUT_ROOT/rerank/<tag>/<dataset>/<split>.jsonl + <split>.meta.json
 """
 import argparse
+import hashlib
+from pathlib import Path
 import random
 import time
 
@@ -27,6 +29,8 @@ ap = argparse.ArgumentParser()
 ap.add_argument("--dataset", default="microlens")
 ap.add_argument("--split", default="val", choices=["val", "test"])
 ap.add_argument("--k", type=int, default=50)
+ap.add_argument("--candidates", type=Path, help="Explicit candidate manifest, including tagged experiments")
+ap.add_argument("--hf-batch-size", type=int, default=1, help="Candidate prompts per HF forward pass")
 ap.add_argument("--template", default="onerec", choices=list(TEMPLATES))
 ap.add_argument("--history-images", action="store_true")
 ap.add_argument("--backend", default="vllm", choices=["vllm", "hf"])
@@ -37,8 +41,16 @@ ap.add_argument("--users-per-call", type=int, default=32, help="每次送进模�
 ap.add_argument("--no-prefix-cache", action="store_true")
 ap.add_argument("--tag", default=None, help="输出目录名，默认 qwen25vl3b_zs_<template>")
 args = ap.parse_args()
+if args.users_per_call < 1 or args.hf_batch_size < 1 or (args.max_users is not None and args.max_users < 1):
+    ap.error("Batch sizes and max-users must be positive")
+out = rerank_dir(args.dataset, args.tag or f"qwen25vl3b_zs_{args.template}")
+if (out / f"{args.split}.jsonl").exists() or (out / f"{args.split}.meta.json").exists():
+    ap.error(f"Output already exists; choose a new --tag: {out}")
 
-cands = list(read_jsonl(candidates_path(args.dataset, args.split, args.k)))
+candidate_file = args.candidates or candidates_path(args.dataset, args.split, args.k)
+cands = list(read_jsonl(candidate_file))
+if not cands or any(len(r['candidates']) != args.k for r in cands):
+    ap.error("Empty manifest or candidate count does not match --k")
 n_all = len(cands)
 if args.max_users and args.max_users < n_all:
     keep = set(random.Random(args.seed).sample(range(n_all), args.max_users))
@@ -48,6 +60,8 @@ cfg = PromptConfig(template=args.template, history_images=args.history_images)
 ds = RerankPromptDataset(cands, load_catalog(args.dataset), cfg, args.dataset)
 
 kw = {"model_name": args.model}
+if args.backend == "hf":
+    kw["batch_size"] = args.hf_batch_size
 if args.backend == "vllm":
     kw.update(max_images_per_prompt=ds.max_images_per_prompt, min_pixels=cfg.min_pixels,
               max_pixels=cfg.max_pixels, enable_prefix_caching=not args.no_prefix_cache)
@@ -67,6 +81,8 @@ elapsed = time.perf_counter() - t0
 out = rerank_dir(args.dataset, args.tag or f"qwen25vl3b_zs_{args.template}")
 write_jsonl(out / f"{args.split}.jsonl", records)
 write_meta(out / f"{args.split}.meta.json", {
+    "candidate_file": candidate_file.name,
+    "candidate_sha256": hashlib.sha256(candidate_file.read_bytes()).hexdigest(),
     **ds.meta(), "split": args.split, "k": args.k,
     "n_users_total": n_all, "sample_seed": args.seed if args.max_users else None,
     "seconds_total": round(elapsed, 2),
