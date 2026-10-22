@@ -17,6 +17,11 @@ DEFAULT_QWEN = "Qwen/Qwen2.5-VL-3B-Instruct"
 Messages = list[dict]
 
 
+def yes_no_margin(lm_head_weight, yes_id: int, no_id: int):
+    """hidden @ margin == logit_Yes − logit_No，全程 FP32。"""
+    return lm_head_weight[yes_id].float() - lm_head_weight[no_id].float()
+
+
 class _Base:
     model_name: str
     yes_id: int
@@ -50,9 +55,14 @@ class QwenScorerHF(_Base):
         self.processor.tokenizer.padding_side = "left"  # 左 padding，最后一个位置就是答案位置
         self.yes_id, self.no_id = yes_no_token_ids(self.processor.tokenizer)
         self.hf_commit = getattr(self.model.config, "_commit_hash", None)
+        # BF16 logits 在 ~20 附近步长 0.125，大量候选会同分。分母抵消后 logP(Yes) − logP(No) = logit_Yes − logit_No，
+        # 所以 lm_head 换成恒等（权重和 embedding 共享，embedding 不受影响），在 FP32 里只算 Yes−No 方向
+        self.margin = yes_no_margin(self.model.lm_head.weight, self.yes_id, self.no_id)
+        self.model.lm_head = torch.nn.Identity()
 
     def meta(self) -> dict:
-        return {**super().meta(), "hf_commit": self.hf_commit, "batch_size": self.batch_size}
+        return {**super().meta(), "hf_commit": self.hf_commit, "batch_size": self.batch_size,
+                "score_precision": "fp32 hidden @ (W_yes - W_no)"}
 
     def score_messages(self, msgs: list[Messages]) -> np.ndarray:
         import torch
@@ -67,8 +77,8 @@ class QwenScorerHF(_Base):
                 images, _ = process_vision_info(chunk)
                 inputs = self.processor(text=texts, images=images, padding=True,
                                         return_tensors="pt").to(self.device)
-                logp = self.model(**inputs).logits[:, -1, :].float().log_softmax(-1)
-                out.append((logp[:, self.yes_id] - logp[:, self.no_id]).cpu().numpy())
+                hidden = self.model(**inputs).logits[:, -1, :]  # lm_head 是恒等，这里是最后一层隐藏状态
+                out.append((hidden.float() @ self.margin).cpu().numpy())
         return np.concatenate(out).astype(np.float32) if out else np.empty(0, np.float32)
 
 

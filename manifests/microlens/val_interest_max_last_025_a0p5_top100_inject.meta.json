@@ -1,0 +1,19 @@
+{
+  "mode": "inject",
+  "oracle": true,
+  "source_file": "val_interest_max_last_025_a0p5_top100.jsonl",
+  "source_sha256": "3e656de7a6c7620ca3c4a42201f1f0c55ef532b8cbe6dab0e66761b2ae516b12",
+  "sha256": "83d4e2d6331514e17c42209006a502cc85759531b5e2075be503f2a8e392934d",
+  "n_users": 4501,
+  "n_users_source": 5000,
+  "seed": 2025,
+  "git_commit": "b09864039a27656f08de1e064f35b678058e5d1c",
+  "created_at": "2026-10-21T21:40:16+00:00",
+  "host": "daniel-Z-lab",
+  "versions": {
+    "torch": "2.5.1",
+    "transformers": "4.49.0",
+    "vllm": null,
+    "qwen-vl-utils": "0.0.10"
+  }
+}

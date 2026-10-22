@@ -1,0 +1,12 @@
+{
+  "n_users": 500,
+  "retrieval_HR@3": 0.014,
+  "retrieval_NDCG@3": 0.011523719014285831,
+  "retrieval_HR@10": 0.082,
+  "retrieval_NDCG@10": 0.0349930250421136,
+  "rerank_HR@3": 0.034,
+  "rerank_NDCG@3": 0.023309297535714577,
+  "rerank_HR@10": 0.094,
+  "rerank_NDCG@10": 0.04348041165254234,
+  "candidate_recall": 1.0
+}
