@@ -1,6 +1,10 @@
 # mm-retrieval-rerank
 
-两阶段多模态推荐：Stage 1 冻结 CLIP 全库召回 Top-50 → Stage 2 Qwen2.5-VL-3B pointwise 重排。
+两阶段多模态推荐：Stage 1 冻结 CLIP 全库召回 Top-50/100 → Stage 2 Qwen2.5-VL-3B pointwise 重排。
+
+## 后半程开发与运行
+
+[MicroLens 后半程运行手册](docs/final_pipeline.md) 从单卡环境和小样本试跑开始，覆盖训练候选、LoRA SFT、DPO、HaNoRec、可恢复评分、最终评估与演示。第一阶段使用固定的自然候选进行配对对照。实验表格见 [最终结果模板](reports/final_results_template.md)。
 
 ## 实验室 Qwen 重排交接
 

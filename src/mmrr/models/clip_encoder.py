@@ -22,11 +22,12 @@ def pick_device() -> str:
 
 
 class ClipEncoder:
-    def __init__(self, model_name: str = DEFAULT_CLIP, device: str | None = None):
+    def __init__(self, model_name: str = DEFAULT_CLIP, device: str | None = None, revision: str | None = None):
         self.model_name = model_name
         self.device = device or pick_device()
-        self.model = CLIPModel.from_pretrained(model_name).to(self.device).eval()
-        self.processor = CLIPProcessor.from_pretrained(model_name)
+        self.revision = revision
+        self.model = CLIPModel.from_pretrained(model_name, revision=revision).to(self.device).eval()
+        self.processor = CLIPProcessor.from_pretrained(model_name, revision=revision)
         self.n_truncated = 0
 
     @property
@@ -36,6 +37,7 @@ class ClipEncoder:
     def meta(self) -> dict:
         return {
             "model": self.model_name,
+            "revision": self.revision,
             "hf_commit": getattr(self.model.config, "_commit_hash", None),
             "dim": self.dim,
             "max_text_len": MAX_TEXT_LEN,
@@ -61,7 +63,10 @@ class ClipEncoder:
         """返回 (n, dim) float32，每行已 L2 归一化。图片统一转 RGB。"""
         out = []
         for i in tqdm(range(0, len(paths), batch_size), desc="clip image"):
-            imgs = [Image.open(p).convert("RGB") for p in paths[i:i + batch_size]]
+            imgs = []
+            for path in paths[i:i + batch_size]:
+                with Image.open(path) as image:
+                    imgs.append(image.convert("RGB"))
             batch = self.processor(images=imgs, return_tensors="pt").to(self.device)
             out.append(self._norm(self.model.get_image_features(**batch)))
         return np.concatenate(out)

@@ -1,0 +1,7 @@
+# Install the matching torch/torchvision CUDA wheels first. See docs/final_pipeline.md.
+-r requirements.txt
+accelerate==1.4.0
+peft==0.14.0
+huggingface-hub==0.29.3
+numpy==1.26.4
+pytest==8.3.5

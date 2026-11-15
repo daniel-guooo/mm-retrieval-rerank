@@ -1,0 +1,17 @@
+{
+  "dataset": "microlens",
+  "retrieval": "max_last_025",
+  "k": 100,
+  "selection_metric": "NDCG@10",
+  "variants": [
+    {"name": "clip", "seeds": [null]},
+    {"name": "zero_shot", "seeds": [null]},
+    {"name": "fusion", "seeds": [null]},
+    {"name": "sft_random", "seeds": [2025, 2026, 2027]},
+    {"name": "sft_retrieved", "seeds": [2025, 2026, 2027]},
+    {"name": "dpo_random", "seeds": [2025, 2026, 2027]},
+    {"name": "dpo_retrieved", "seeds": [2025, 2026, 2027]},
+    {"name": "hanorec_random", "seeds": [2025, 2026, 2027]},
+    {"name": "hanorec_retrieved", "seeds": [2025, 2026, 2027]}
+  ]
+}

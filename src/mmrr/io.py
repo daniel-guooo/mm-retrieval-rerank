@@ -52,7 +52,7 @@ def write_meta(path: Path, meta: dict) -> None:
         "git_commit": git_commit(),
         "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "host": platform.node(),
-        "versions": {p: ver(p) for p in ("torch", "transformers", "vllm", "qwen-vl-utils")},
+        "versions": {p: ver(p) for p in ("torch", "transformers", "vllm", "qwen-vl-utils", "peft", "accelerate", "numpy")},
     }
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(full, ensure_ascii=False, indent=2), encoding="utf-8")

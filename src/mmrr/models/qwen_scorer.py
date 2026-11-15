@@ -17,6 +17,34 @@ DEFAULT_QWEN = "Qwen/Qwen2.5-VL-3B-Instruct"
 Messages = list[dict]
 
 
+def qwen_prompt_inputs(processor, messages):
+    """Use identical multimodal preprocessing at training and scoring time."""
+    from qwen_vl_utils import process_vision_info
+
+    text = [processor.apply_chat_template(msg, tokenize=False, add_generation_prompt=True)
+            for msg in messages]
+    images, _ = process_vision_info(messages)
+    return processor(text=text, images=images, padding=True, return_tensors="pt")
+
+
+def load_qwen(model_name, device, precision, revision=None, sft_adapter=None):
+    import torch
+    from transformers import AutoProcessor, Qwen2_5_VLForConditionalGeneration
+
+    dtypes = {"bf16": torch.bfloat16, "fp16": torch.float16, "fp32": torch.float32}
+    processor = AutoProcessor.from_pretrained(model_name, revision=revision)
+    processor.tokenizer.padding_side = "left"
+    model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
+        model_name, revision=revision, torch_dtype=dtypes[precision],
+        attn_implementation="sdpa", low_cpu_mem_usage=True,
+    )
+    if sft_adapter is not None:
+        from peft import PeftModel
+
+        model = PeftModel.from_pretrained(model, sft_adapter).merge_and_unload(safe_merge=True)
+    return model.to(device), processor
+
+
 def yes_no_margin(lm_head_weight, yes_id: int, no_id: int):
     """hidden @ margin == logit_Yes − logit_No，全程 FP32。"""
     return lm_head_weight[yes_id].float() - lm_head_weight[no_id].float()
@@ -40,44 +68,45 @@ class _Base:
 class QwenScorerHF(_Base):
     backend = "hf"
 
-    def __init__(self, model_name: str = DEFAULT_QWEN, device: str | None = None, batch_size: int = 8):
+    def __init__(self, model_name: str = DEFAULT_QWEN, device: str | None = None, batch_size: int = 8,
+                 revision=None, precision=None, adapter=None, sft_adapter=None):
         import torch
-        from transformers import AutoProcessor, Qwen2_5_VLForConditionalGeneration
 
         from mmrr.models.clip_encoder import pick_device
 
         self.model_name, self.batch_size = model_name, batch_size
         self.device = device or pick_device()
-        dtype = {"cuda": torch.bfloat16, "mps": torch.float16}.get(self.device, torch.float32)
-        self.model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
-            model_name, torch_dtype=dtype).to(self.device).eval()
-        self.processor = AutoProcessor.from_pretrained(model_name)
-        self.processor.tokenizer.padding_side = "left"  # 左 padding，最后一个位置就是答案位置
+        self.precision = precision or {"cuda": "bf16", "mps": "fp16"}.get(self.device, "fp32")
+        self.model, self.processor = load_qwen(model_name, self.device, self.precision, revision, sft_adapter)
         self.yes_id, self.no_id = yes_no_token_ids(self.processor.tokenizer)
         self.hf_commit = getattr(self.model.config, "_commit_hash", None)
         # BF16 logits 在 ~20 附近步长 0.125，大量候选会同分。分母抵消后 logP(Yes) − logP(No) = logit_Yes − logit_No，
         # 所以 lm_head 换成恒等（权重和 embedding 共享，embedding 不受影响），在 FP32 里只算 Yes−No 方向
-        self.margin = yes_no_margin(self.model.lm_head.weight, self.yes_id, self.no_id)
-        self.model.lm_head = torch.nn.Identity()
+        self.margin = yes_no_margin(self.model.lm_head.weight.detach(), self.yes_id, self.no_id)
+        self.adapter, self.sft_adapter, self.revision = adapter, sft_adapter, revision
+        if adapter is not None:
+            from peft import PeftModel
+
+            self.model = PeftModel.from_pretrained(self.model, adapter)
+        self.model.eval()
+        base = self.model.get_base_model() if adapter is not None else self.model
+        base.lm_head = torch.nn.Identity()
 
     def meta(self) -> dict:
         return {**super().meta(), "hf_commit": self.hf_commit, "batch_size": self.batch_size,
+                "revision": self.revision, "precision": self.precision,
+                "adapter": self.adapter, "sft_adapter": self.sft_adapter,
                 "score_precision": "fp32 hidden @ (W_yes - W_no)"}
 
     def score_messages(self, msgs: list[Messages]) -> np.ndarray:
         import torch
-        from qwen_vl_utils import process_vision_info
 
         out = []
         with torch.no_grad():
             for i in range(0, len(msgs), self.batch_size):
                 chunk = msgs[i:i + self.batch_size]
-                texts = [self.processor.apply_chat_template(m, tokenize=False, add_generation_prompt=True)
-                         for m in chunk]
-                images, _ = process_vision_info(chunk)
-                inputs = self.processor(text=texts, images=images, padding=True,
-                                        return_tensors="pt").to(self.device)
-                hidden = self.model(**inputs).logits[:, -1, :]  # lm_head 是恒等，这里是最后一层隐藏状态
+                inputs = qwen_prompt_inputs(self.processor, chunk).to(self.device)
+                hidden = self.model(**inputs, use_cache=False).logits[:, -1, :]
                 out.append((hidden.float() @ self.margin).cpu().numpy())
         return np.concatenate(out).astype(np.float32) if out else np.empty(0, np.float32)
 

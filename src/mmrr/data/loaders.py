@@ -116,9 +116,9 @@ def build_catalog(dataset: str, titles: dict, images: dict, rows: dict) -> tuple
     return catalog, image_info
 
 
-def load_catalog(dataset: str) -> dict[int, Item]:
-    return build_catalog(dataset, read_titles(dataset), image_files(dataset),
-                         {split: read_interactions(dataset, split) for split in SPLITS})[0]
+def load_catalog(dataset: str, *, include_interaction_ids: bool = True) -> dict[int, Item]:
+    rows = {split: read_interactions(dataset, split) for split in SPLITS} if include_interaction_ids else {}
+    return build_catalog(dataset, read_titles(dataset), image_files(dataset), rows)[0]
 
 
 def load_sequences(dataset: str, split: str) -> list[Sequence]:
